@@ -16,7 +16,6 @@ The goal of this project is to predict the manner in which people did the exerci
 ```{r,message=F,warning=F}
 library(caret)
 library(rattle)
-library(caret)
 library(rpart)
 library(randomForest)
 library(gbm)
@@ -33,17 +32,23 @@ The training dataset includes 160 variables, 19622 observation. Here we ignore t
 
 #Data cleaning
 ```{r,message=F,warning=F}
-#remove variables that contains missing values
-#remove the first seven varialbes
+#Remove variables that contains missing values
+#Remove the first seven varialbes
 training <- train[,colSums(is.na(train))==0]
 training <- training[,-c(1:7)]
-dim(training)
 
-
-# Repeat for the test set
+#Repeat for the test set
 testing <- test[,colSums(is.na(test))==0]
 testing <- testing[,-c(1:7)]
-dim(testing)
+
+dim(training);dim(testing)
+
+#Cleaning further by removing the variables that are near-zero-variance
+nzv <- nearZeroVar(training)
+train1 <- training[, -nzv]
+test1  <- testing[, -nzv]
+dim(train1);dim(test1)
+
 
 ```
 
@@ -54,17 +59,9 @@ Preparing the data for prediction by splitting the training data into 70% as tra
 #Data slicing to training and testing dataset 
 set.seed(7777777)
 intrain <- createDataPartition(training$classe, p=0.7, list=F)
-train1 <- training[intrain,]
-test1 <- training[-intrain,]
+train1 <- train1[intrain,]
+test1 <- train1[-intrain,]
 dim(train1);dim(test1)
-
-
-#Cleaning further by removing the variables that are near-zero-variance
-nzv <- nearZeroVar(training)
-train1 <- train1[, -nzv]
-test1  <- test1[, -nzv]
-dim(train1);dim(test1)
-
 ```
 
 Here we use the findCorrelation function to search for highly correlated attributes with a cut off of 0.8
@@ -97,7 +94,7 @@ confm.ct<- confusionMatrix(test1$classe,pred.ct)
 # display confusion matrix and model accuracy
 confm.ct$table;confm.ct$overall[1]
 ```
-The accuracy is below 0.5, the out-of sample error is about 0.5, suggesting the model is not good enough.
+The accuracy is below 0.494, the out-of sample error is about 0.5, suggesting the model is not good enough.
 
 
 ###Train with random forests
