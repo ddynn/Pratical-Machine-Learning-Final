@@ -12,7 +12,7 @@ Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible t
 
 The goal of this project is to predict the manner in which people did the exercise. Include the model building, cross validation and use the model to predict 20 more different test cases.
 
-#Package
+
 ```{r,message=F,warning=F}
 library(caret)
 library(rattle)
@@ -60,7 +60,6 @@ dim(train1);dim(test1)
 
 
 #Cleaning further by removing the variables that are near-zero-variance
-
 nzv <- nearZeroVar(training)
 train1 <- train1[, -nzv]
 test1  <- test1[, -nzv]
@@ -98,7 +97,7 @@ confm.ct<- confusionMatrix(test1$classe,pred.ct)
 # display confusion matrix and model accuracy
 confm.ct$table;confm.ct$overall[1]
 ```
-The Accuracy is below 0.5, suggesting the model is not good enough.
+The accuracy is below 0.5, the out-of sample error is about 0.5, suggesting the model is not good enough.
 
 
 ###Train with random forests
@@ -114,7 +113,7 @@ confmrf <- confusionMatrix(test1$classe,pred.rf)
 # display confusion matrix and model accuracy
 confmrf$table;confmrf$overall[1]
 ```
-The accuracy rate using the random forest is 0.993,it might be overfitting.
+The accuracy rate using the random forest is 0.993,the out-of-sample error is about 0.007,it might be overfitting.
 
 ```{r}
 model.rf$finalModel$classes
@@ -138,7 +137,7 @@ confm.bt <- confusionMatrix(test1$classe,pred.bt)
 confm.bt$table;confm.bt$overall[1]
 
 ```
-The accuracy is 0.959, therefore the out-of-sample error is 0.041
+The accuracy is 0.959, therefore the out-of-sample error is 0.041.
 
 ```{r}
 finalmodel <- predict(model.bt,newdata=testing)
