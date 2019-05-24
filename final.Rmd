@@ -57,14 +57,14 @@ Preparing the data for prediction by splitting the training data into 70% as tra
 
 ```{r,message=F,warning=F}
 #Data slicing to training and testing dataset 
-set.seed(7777777)
+set.seed(7654321)
 intrain <- createDataPartition(training$classe, p=0.7, list=F)
 train1 <- train1[intrain,]
 test1 <- train1[-intrain,]
 dim(train1);dim(test1)
 ```
 
-Here we use the findCorrelation function to search for highly correlated attributes with a cut off of 0.8
+Here we use the findCorrelation function to show the variables with >0.8 correlation
 
 ```{r}
 cor_matrix <- cor(train1[, -53]) 
@@ -94,7 +94,7 @@ confm.ct<- confusionMatrix(test1$classe,pred.ct)
 # display confusion matrix and model accuracy
 confm.ct$table;confm.ct$overall[1]
 ```
-The accuracy is below 0.494, the out-of sample error is about 0.5, suggesting the model is not good enough.
+The accuracy is below 0.513, the out-of sample error is about 0.487, suggesting the model is not good enough.
 
 
 ###Train with random forests
@@ -110,7 +110,7 @@ confmrf <- confusionMatrix(test1$classe,pred.rf)
 # display confusion matrix and model accuracy
 confmrf$table;confmrf$overall[1]
 ```
-The accuracy rate using the random forest is 0.993,the out-of-sample error is about 0.007,it might be overfitting.
+The accuracy rate using the random forest is 1,the out-of-sample error is about 0. We could understand that it might be overfitting.
 
 ```{r}
 model.rf$finalModel$classes
@@ -134,7 +134,7 @@ confm.bt <- confusionMatrix(test1$classe,pred.bt)
 confm.bt$table;confm.bt$overall[1]
 
 ```
-The accuracy is 0.959, therefore the out-of-sample error is 0.041.
+The accuracy is 0.979, therefore the out-of-sample error is 0.021. This boosting model may perfom better on the testing dataset.
 
 ```{r}
 finalmodel <- predict(model.bt,newdata=testing)
